@@ -1,5 +1,12 @@
 import locale
 import datetime
+from enum import Enum
+
+class State(Enum):
+    TODO = 0
+    IN_PROGRESS = 1
+    TESTING = 2
+    DONE = 3
 
 locale.setlocale(locale.LC_TIME, 'fr-FR')
 
@@ -8,6 +15,7 @@ class Task:
     def __init__(self, title, description):
         self.title = title
         self.description = description
+        self.state = State.TODO
         self.contributors = []
         self.sub_tasks = []
         self.event_history = []
