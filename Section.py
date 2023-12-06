@@ -1,5 +1,6 @@
 import pygame
 from Cursor import Cursor
+from AppState import AppState
 
 class Section:
 
@@ -39,16 +40,16 @@ class Section:
     def addTask(self, task):
         self.tasks.append(task)
 
-    def check_interaction(self, mouse_pos, is_clicking):
+    def check_interaction(self, mouse_pos):
 
 
         for task in self.tasks:
-            task.check_interaction(mouse_pos, is_clicking)
+            task.check_interaction(mouse_pos)
             
         is_title_hovered = self.title_back_rect.collidepoint(mouse_pos)
 
-        if is_title_hovered and is_clicking:
-            print("Section click")
+        if is_title_hovered and AppState.is_clicking:
+            AppState.selected_section = self
             
         if self.is_title_hovered == is_title_hovered:
             return

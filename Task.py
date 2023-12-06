@@ -1,6 +1,7 @@
 from Utils import Utils
 from Cursor import Cursor
 import pygame
+from AppState import AppState
 
 class Task:
 
@@ -33,12 +34,13 @@ class Task:
         screen.blit(self.title_text, (delta_back_pos[0] + 16 , delta_back_pos[1] + 10))
         screen.blit(self.description_text, (delta_back_pos[0] + 16 , delta_back_pos[1] + 36))
 
-    def check_interaction(self, mouse_pos, is_clicking):
+    def check_interaction(self, mouse_pos):
         is_hovered = self.back_task_rect.collidepoint(mouse_pos)
 
 
-        if is_clicking and is_hovered:
+        if AppState.is_clicking and is_hovered:
             print("Click Task ", self.title)
+            AppState.selected_task = self
 
         if self.is_hovered == is_hovered:
             return

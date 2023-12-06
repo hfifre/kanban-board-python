@@ -16,3 +16,7 @@ class Utils:
     @staticmethod
     def getText(text, size):
         return Utils.getFont(size).render(text, True, Utils.title_color)
+
+    @staticmethod
+    def getTextWithColor(text, size, color):
+        return Utils.getFont(size).render(text, True, color)

@@ -4,6 +4,8 @@ from Section import Section
 from Task import Task
 from Utils import Utils
 from Cursor import Cursor
+from AddTaskDialog import AddTaskDialog
+from AppState import AppState
 
 def initialize():
     pygame.init()
@@ -64,6 +66,7 @@ def tryUpdateCursor():
     else:
         pygame.mouse.set_cursor(*pygame.cursors.arrow)
 
+
 def main():
     screen, images, sections = initialize()
 
@@ -76,19 +79,21 @@ def main():
     task = Task("Finaliser Processus", "Toi même tu sais.")
     sections[0].addTask(task)
 
+    add_task_dialog = AddTaskDialog(images)
+
     running = True
-    is_clicking = False
+
     pygame.mouse.set_cursor(*pygame.cursors.arrow)
 
     while running:
         
-        is_clicking = False
+        AppState.is_clicking = False
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONUP:
-                is_clicking = True
+                AppState.is_clicking = True
 
 
         back_color = pygame.Color("#1C1C1C")
@@ -97,8 +102,15 @@ def main():
         mouse_pos = pygame.mouse.get_pos()
 
         for section in sections:
-            section.check_interaction(mouse_pos, is_clicking)
+
+            if not AppState.in_add_mode:
+                section.check_interaction(mouse_pos)
+
             section.display(screen)
+
+        if AppState.in_add_mode:
+            add_task_dialog.check_interaction(mouse_pos)
+            add_task_dialog.display(screen)
 
         tryUpdateCursor()
 
