@@ -6,6 +6,7 @@ from Utils import Utils
 from Cursor import Cursor
 from AddTaskDialog import AddTaskDialog
 from AppState import AppState
+from AddBtn import AddBtn
 
 def initialize():
     pygame.init()
@@ -57,6 +58,7 @@ def initialize():
     return screen, images, sections
     
 
+
 def tryUpdateCursor():
     if not Cursor.has_changed:
         return
@@ -79,15 +81,23 @@ def main():
     task = Task("Finaliser Processus", "Toi même tu sais.")
     sections[0].addTask(task)
 
+    add_btn = AddBtn(images)
     add_task_dialog = AddTaskDialog(images)
 
     running = True
 
     pygame.mouse.set_cursor(*pygame.cursors.arrow)
 
+    
+
     while running:
         
+        AppState.key_pressed = []
         AppState.is_clicking = False
+        Cursor.has_changed = False
+
+        if Cursor.nb_hovered < 0:
+            Cursor.nb_hovered = 0
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -95,18 +105,25 @@ def main():
             if event.type == pygame.MOUSEBUTTONUP:
                 AppState.is_clicking = True
 
+            if event.type == pygame.KEYDOWN:
+                AppState.key_pressed.append(event.key)
+
 
         back_color = pygame.Color("#1C1C1C")
         screen.fill(back_color)
 
         mouse_pos = pygame.mouse.get_pos()
 
+
         for section in sections:
 
             if not AppState.in_add_mode:
                 section.check_interaction(mouse_pos)
+                add_btn.check_interaction(mouse_pos)
 
             section.display(screen)
+
+        add_btn.display(screen)
 
         if AppState.in_add_mode:
             add_task_dialog.check_interaction(mouse_pos)
@@ -114,25 +131,10 @@ def main():
 
         tryUpdateCursor()
 
-        #pygame.draw.circle(screen, "red", player_pos, 40)
 
-        # keys = pygame.key.get_pressed()
-        # if keys[pygame.K_w]:
-        #     player_pos.y -= 300 * dt
-        # if keys[pygame.K_s]:
-        #     player_pos.y += 300 * dt
-        # if keys[pygame.K_a]:
-        #     player_pos.x -= 300 * dt
-        # if keys[pygame.K_d]:
-        #     player_pos.x += 300 * dt
 
-        # flip() the display to put your work on screen
+  
         pygame.display.flip()
-
-        # limits FPS to 60
-        # dt is delta time in seconds since last frame, used for framerate-
-        # independent physics.
-        # dt = clock.tick(60) / 1000
 
 pygame.quit()
 
